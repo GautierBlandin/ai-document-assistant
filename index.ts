@@ -1,46 +1,82 @@
-import * as pulumi from '@pulumi/pulumi';
 import * as aws from '@pulumi/aws';
-import * as apigateway from '@pulumi/aws-apigateway';
+import * as pulumi from '@pulumi/pulumi';
 
-const assumeRole = aws.iam.getPolicyDocument({
-  statements: [
-    {
-      effect: 'Allow',
-      principals: [
-        {
-          type: 'Service',
-          identifiers: ['lambda.amazonaws.com'],
+const stack = pulumi.getStack();
+
+const lambdaRole = new aws.iam.Role('lambdaRole', {
+  assumeRolePolicy: {
+    Version: '2012-10-17',
+    Statement: [
+      {
+        Action: 'sts:AssumeRole',
+        Principal: {
+          Service: 'lambda.amazonaws.com',
         },
-      ],
-      actions: ['sts:AssumeRole'],
-    },
-  ],
+        Effect: 'Allow',
+        Sid: '',
+      },
+    ],
+  },
 });
 
-const iamForLambda = new aws.iam.Role('iam_for_lambda', {
-  name: 'iam_for_lambda',
-  assumeRolePolicy: assumeRole.then((assumeRole) => assumeRole.json),
-});
-
-const lambda = new aws.lambda.Function('myLambda', {
+const lambda = new aws.lambda.Function('lambdaFunction', {
   code: new pulumi.asset.AssetArchive({
     '.': new pulumi.asset.FileArchive('./dist/lambda'),
   }),
-  handler: 'handler.handler',
   runtime: aws.lambda.Runtime.NodeJS20dX,
-  role: iamForLambda.arn,
+  role: lambdaRole.arn,
+  handler: 'handler.handler',
 });
 
-// Create an API Gateway REST API
-const remixApi = new apigateway.RestAPI('remix-api', {
-  routes: [
-    {
-      path: '/{proxy+}',
-      method: 'ANY',
-      eventHandler: lambda,
-    },
-  ],
+new aws.iam.RolePolicyAttachment('lambdaRoleAttachment', {
+  role: lambdaRole,
+  policyArn: aws.iam.ManagedPolicy.AWSLambdaBasicExecutionRole,
 });
 
-// Export the API Gateway URL
-export const apiUrl = remixApi.url;
+const apigw = new aws.apigatewayv2.Api('httpApiGateway', {
+  protocolType: 'HTTP',
+});
+
+new aws.lambda.Permission(
+  'lambdaPermission',
+  {
+    action: 'lambda:InvokeFunction',
+    principal: 'apigateway.amazonaws.com',
+    function: lambda,
+    sourceArn: pulumi.interpolate`${apigw.executionArn}/*/*`,
+  },
+  { dependsOn: [apigw, lambda] },
+);
+
+const integration = new aws.apigatewayv2.Integration('lambdaIntegration', {
+  apiId: apigw.id,
+  integrationType: 'AWS_PROXY',
+  integrationUri: lambda.arn,
+  payloadFormatVersion: '2.0',
+  passthroughBehavior: 'WHEN_NO_MATCH',
+});
+
+const route = new aws.apigatewayv2.Route('apiRoute', {
+  apiId: apigw.id,
+  routeKey: '$default',
+  target: pulumi.interpolate`integrations/${integration.id}`,
+});
+
+const stage = new aws.apigatewayv2.Stage(
+  'apiStage',
+  {
+    apiId: apigw.id,
+    name: stack,
+    routeSettings: [
+      {
+        routeKey: route.routeKey,
+        throttlingBurstLimit: 5000,
+        throttlingRateLimit: 10000,
+      },
+    ],
+    autoDeploy: true,
+  },
+  { dependsOn: [route] },
+);
+
+export const endpoint = pulumi.interpolate`${apigw.apiEndpoint}/${stage.name}`;
