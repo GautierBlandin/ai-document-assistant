@@ -33,9 +33,10 @@
     "express": "^4.19.2",
     "framer-motion": "^11.2.10",
     "isbot": "^4.1.0",
+    "node-stream": "^1.7.0",
     "prettier-plugin-classnames": "^0.6.6",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "ts-node": "^10.9.2"
   },
