@@ -1,6 +1,10 @@
 import { createRequestHandler } from '@remix-run/architect';
-import * as build from './build/server';
+import * as build from './build/server/index.js';
 
-export const handler = createRequestHandler({
+const requestHandler = createRequestHandler({
   build,
 });
+
+export const handler = (...args: Parameters<typeof requestHandler>) => {
+  return requestHandler(...args);
+};
