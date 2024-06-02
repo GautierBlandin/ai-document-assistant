@@ -1,10 +1,6 @@
 import { createRequestHandler } from '@remix-run/architect';
-import * as aws from '@pulumi/aws';
+import * as build from './build/server';
 
-const handler = createRequestHandler({
-  build: require('./build'),
-});
-
-export const pulumiHandler = new aws.lambda.CallbackFunction('lambda', {
-  callback: handler,
+export const handler = createRequestHandler({
+  build,
 });
