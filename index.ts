@@ -25,7 +25,7 @@ const lambda = new aws.lambda.Function('lambdaFunction', {
   }),
   runtime: aws.lambda.Runtime.NodeJS20dX,
   role: lambdaRole.arn,
-  handler: 'handler.handler',
+  handler: 'ai-book-reader.handler',
 });
 
 new aws.iam.RolePolicyAttachment('lambdaRoleAttachment', {
@@ -54,6 +54,7 @@ const integration = new aws.apigatewayv2.Integration('lambdaIntegration', {
   integrationUri: lambda.arn,
   payloadFormatVersion: '2.0',
   passthroughBehavior: 'WHEN_NO_MATCH',
+  requestParameters: { 'overwrite:path': '$request.path.replace("/' + stack + '", "")' },
 });
 
 const route = new aws.apigatewayv2.Route('apiRoute', {
