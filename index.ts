@@ -1,5 +1,30 @@
 import * as aws from '@pulumi/aws';
 import * as pulumi from '@pulumi/pulumi';
+import * as synced from '@pulumi/synced-folder';
+
+const bucket = new aws.s3.Bucket('bucket');
+
+const ownershipControls = new aws.s3.BucketOwnershipControls('ownership-controls', {
+  bucket: bucket.bucket,
+  rule: {
+    objectOwnership: 'ObjectWriter',
+  },
+});
+
+const publicAccessBlock = new aws.s3.BucketPublicAccessBlock('public-access-block', {
+  bucket: bucket.bucket,
+  blockPublicAcls: false,
+});
+
+new synced.S3BucketFolder(
+  'synced-folder',
+  {
+    path: './build/client',
+    bucketName: bucket.bucket,
+    acl: aws.s3.PublicReadAcl,
+  },
+  { dependsOn: [ownershipControls, publicAccessBlock] },
+);
 
 const stack = pulumi.getStack();
 
