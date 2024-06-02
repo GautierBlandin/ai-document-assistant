@@ -2,13 +2,16 @@
   "name": "ai-book-reader",
   "private": true,
   "sideEffects": false,
+  "type": "module",
   "scripts": {
     "build": "remix vite:build",
     "build:lambda": "vite build --config vite.lambda.config.ts",
     "dev": "remix vite:dev",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/server/index.js",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "use-pulumi": "cp pulumi.tsconfig.json tsconfig.json",
+    "use-vite": "cp vite.tsconfig.json tsconfig.json"
   },
   "dependencies": {
     "@headlessui/react": "^2.0.4",
@@ -33,15 +36,24 @@
     "prettier-plugin-classnames": "^0.6.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "rollup-plugin-peer-deps-external": "^2.2.4"
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
+    "@aws-sdk/client-apigatewaymanagementapi": "^3.588.0",
+    "@aws-sdk/client-dynamodb": "^3.588.0",
+    "@aws-sdk/client-sns": "^3.588.0",
+    "@aws-sdk/client-sqs": "^3.588.0",
+    "@aws-sdk/client-ssm": "^3.588.0",
+    "@aws-sdk/lib-dynamodb": "^3.588.0",
     "@remix-run/dev": "^2.9.2",
+    "@types/node": "^20.13.0",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",
     "autoprefixer": "^10.4.19",
+    "aws-sdk": "^2.1632.0",
     "eslint": "^8.38.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.28.1",
@@ -52,7 +64,7 @@
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.6.0",
     "tailwindcss": "^3.4.3",
-    "typescript": "^5.4.2",
+    "typescript": "^5.4.5",
     "vite": "^5.1.0",
     "vite-tsconfig-paths": "^4.3.2"
   },
