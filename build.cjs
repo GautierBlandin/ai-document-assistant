@@ -4,7 +4,7 @@ const esbuild = require('esbuild');
 
 esbuild
   .build({
-    entryPoints: ['server.js'], // Entry file
+    entryPoints: ['server.ts'], // Entry file
     bundle: true, // Bundle all dependencies into one file
     platform: 'node', // Specify the platform (node for Node.js)
     target: 'node20', // Target version of Node.js
