@@ -13,6 +13,7 @@ export default function handleRequest(
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext,
 ) {
   const prohibitOutOfOrderStreaming = isBotRequest(request.headers.get('user-agent')) || remixContext.isSpaMode;
@@ -95,12 +96,6 @@ function handleBrowserRequest(
   responseHeaders: Headers,
   remixContext: EntryContext,
 ) {
-  console.log('handleBrowserRequest');
-  console.log(`request: ${JSON.stringify(request, null, 2)}`);
-  console.log(`responseStatusCode: ${responseStatusCode}`);
-  console.log(`responseHeaders: ${JSON.stringify(responseHeaders, null, 2)}`);
-  console.log(`remixContext: ${JSON.stringify(remixContext, null, 2)}`);
-
   return new Promise((resolve, reject) => {
     let shellRendered = false;
     const { pipe, abort } = renderToPipeableStream(
