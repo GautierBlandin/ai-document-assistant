@@ -6,7 +6,8 @@ const requestHandler = createRequestHandler({
   build,
 });
 
-export const handler = ([apiGatewayEvent, ...rest]: Parameters<APIGatewayProxyHandlerV2>) => {
+export const handler = (...args: Parameters<APIGatewayProxyHandlerV2>) => {
+  const [apiGatewayEvent, ...rest] = args;
   // Check if args has the expected structure and modify paths
   if (apiGatewayEvent.rawPath) {
     apiGatewayEvent.rawPath = apiGatewayEvent.rawPath.replace(/^\/dev/, '');
