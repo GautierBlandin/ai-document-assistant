@@ -32,7 +32,7 @@ const ownershipControls = new aws.s3.BucketOwnershipControls('ownership-controls
 new synced.S3BucketFolder(
   'synced-folder',
   {
-    path: './build/client',
+    path: '../build/client',
     bucketName: bucket.bucket,
     acl: 'public-read',
   },
@@ -62,7 +62,7 @@ new aws.iam.RolePolicyAttachment('lambdaRoleAttachment', {
 
 const lambda = new aws.lambda.Function('lambdaFunction', {
   code: new pulumi.asset.AssetArchive({
-    '.': new pulumi.asset.FileArchive('./dist/lambda'),
+    '.': new pulumi.asset.FileArchive('../dist/lambda'),
   }),
   runtime: aws.lambda.Runtime.NodeJS20dX,
   role: lambdaRole.arn,
