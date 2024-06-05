@@ -1,4 +1,4 @@
-const handler = require('./dist/lambda/ai-book-reader.js').handler;
+import { handler } from './dist/lambda/ai-book-reader.cjs';
 
 const apiGatewayEvent = {
   version: '2.0',
@@ -41,5 +41,4 @@ const apiGatewayEvent = {
   },
 };
 
-handler(apiGatewayEvent).then(res => console.log(JSON.stringify(res, null, 2)));
-
+handler(apiGatewayEvent).then((res) => console.log(JSON.stringify(res, null, 2)));
