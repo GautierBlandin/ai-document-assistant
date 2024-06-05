@@ -1,16 +1,14 @@
-// build.js
-
 const esbuild = require('esbuild');
 
 esbuild
   .build({
-    entryPoints: ['server.ts'], // Entry file
+    entryPoints: ['server.ts'],
     bundle: true, // Bundle all dependencies into one file
-    platform: 'node', // Specify the platform (node for Node.js)
-    target: 'node20', // Target version of Node.js
+    platform: 'node',
+    target: 'node20',
     external: ['node:stream'], // Keep Node.js built-ins external
-    outfile: 'dist/lambda/ai-book-reader.cjs', // Output file
-    sourcemap: true, // Generate source map
-    format: 'cjs', // Output format as CommonJS
+    outfile: 'dist/lambda/ai-book-reader.cjs',
+    sourcemap: true,
+    format: 'cjs',
   })
   .catch(() => process.exit(1));
