@@ -62,11 +62,11 @@ new aws.iam.RolePolicyAttachment('lambdaRoleAttachment', {
 
 const lambda = new aws.lambda.Function('lambdaFunction', {
   code: new pulumi.asset.AssetArchive({
-    '.': new pulumi.asset.FileArchive('../dist/lambda'),
+    '.': new pulumi.asset.FileArchive('../build/lambda'),
   }),
   runtime: aws.lambda.Runtime.NodeJS20dX,
   role: lambdaRole.arn,
-  handler: 'ai-book-reader.handler',
+  handler: 'index.handler',
 });
 
 const apigw = new aws.apigatewayv2.Api('httpApiGateway', {

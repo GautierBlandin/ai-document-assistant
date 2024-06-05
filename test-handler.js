@@ -9,10 +9,7 @@ const apiGatewayEvent = {
     Header1: 'value1',
     Header2: 'value2',
   },
-  queryStringParameters: {
-    parameter1: 'value1',
-    parameter2: 'value2',
-  },
+  queryStringParameters: {},
   requestContext: {
     accountId: '123456789012',
     apiId: 'api-id',

@@ -7,7 +7,7 @@ esbuild
     platform: 'node',
     target: 'node20',
     external: ['node:stream'], // Keep Node.js built-ins external
-    outfile: 'dist/lambda/ai-book-reader.cjs',
+    outfile: 'build/lambda/index.cjs',
     sourcemap: true,
     format: 'cjs',
   })
