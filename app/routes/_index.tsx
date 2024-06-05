@@ -11,7 +11,7 @@ export default function Index() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold underline">Hello world! 2</h1>
+      <h1 className="text-3xl font-bold underline">Hello world!</h1>
       <Button
         type="button"
         onClick={() => setCounter(counter + 1)}
@@ -19,7 +19,7 @@ export default function Index() {
 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
 focus-visible:outline-indigo-600"
       >
-        Button text
+        Increase counter
       </Button>
       <span className="text-red-500">{counter}</span>
     </div>
